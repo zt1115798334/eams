@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <th:block th:include="include :: select2-css"/>
+    <th:block th:include="include :: header('修改策略')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-policy-update">
+        <input id="treeId" name="parentId" type="hidden" th:value="${policy==null?0:policy.parentId}"/>
+        <input name="polId" type="hidden" th:value="${policy==null?0:policy.polId}"/>
+        <input name="deptId" type="hidden" th:value="${policy==null?0:policy.deptId}"/>
+        <h4 class="form-header h4">基本信息</h4>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">上级：</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input class="form-control" type="text" onclick="selectPolicyTree()" id="treeName" readonly="true"
+                           th:value="${policy.parentName}">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red; ">*</span>名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="polName" id="polName" required
+                       th:value="${policy.polName}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red; ">*</span>显示排序：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="orderNum" required th:value="${policy.orderNum}">
+                <span class="help-block m-b-none">
+                    <i class="fa fa-info-circle"></i> 数值越小越靠前</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">分数：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="score" th:value="${policy.score}">
+                <span class="help-block m-b-none">
+                    <i class="fa fa-info-circle"></i> 此处填写该项目的分数</span>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">策略状态：</label>
+            <div class="col-sm-8">
+                <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                    <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}"
+                           th:field="*{policy.status}"
+                           th:checked="${dict.isDefault == 'Y' ? true : false}">
+                    <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">需要输入：</label>
+            <div class="col-sm-8">
+                <div class="radio-box">
+                    <input type="radio" id="yes" name="input" th:field="*{policy.input}" value="0">
+                    <label for="yes">是</label>
+                </div>
+                <div class="radio-box">
+                    <input type="radio" id="no" name="input" th:field="*{policy.input}" value="1">
+                    <label for="no">否</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">核定部门：</label>
+            <div class="col-sm-8">
+                <select id="depts" class="form-control select2-hidden-accessible">
+                    <option value="">请选择该策略核定的部门</option>
+                    <option th:each="dept:${depts}" th:value="${dept.deptId}" th:text="${dept.deptName}"
+                            th:selected="${dept.deptId==policy.deptId?true:false}"
+                            th:disabled="${dept.status == '1'}"></option>
+                </select>
+            </div>
+        </div>
+        <h4 class="form-header h4">其他信息</h4>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="col-xs-2 control-label">备注：</label>
+                    <div class="col-xs-10">
+                        <textarea name="remark" autocomplete="off" maxlength="500" class="form-control"
+                                  th:text="${policy.remark}"
+                                  rows="3"></textarea>
+                        <span class="help-block m-b-none">
+                            <i class="fa fa-info-circle"></i> 此处填写详细的规则明细</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: select2-js"/>
+
+<script type="text/javascript">
+    var prefix = ctx + "maintenance/policy";
+
+    $("#form-policy-update").validate({
+        onkeyup: false,
+        rules: {
+            orderNum: {
+                digits: true
+            },
+            email: {
+                email: true,
+            },
+            phoneNum: {
+                isPhone: true,
+            },
+        },
+        messages: {},
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.savePut(prefix + "/edit", $('#form-policy-update').serialize());
+        }
+    }
+
+    /*策略管理-新增-选择父策略树*/
+    function selectPolicyTree() {
+        var polId = $("#treeId").val();
+        if (polId > 0) {
+            var options = {
+                title: '策略选择',
+                width: "380",
+                url: prefix + "/selectPolicyTree/" + $("#treeId").val(),
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        } else {
+            $.modal.alertError("父级不能选择");
+        }
+
+    }
+
+    /*策略管理-新增-选择部门树*/
+    function selectDeptTree() {
+        var treeId = $("#treeId").val();
+        var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        var options = {
+            title: '选择部门',
+            width: "380",
+            url: ctx + "system/dept/selectDeptTree/" + 100,
+            callBack: doSubmitForDept
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmitForDept(index, layero) {
+        var tree = layero.find("iframe")[0].contentWindow.$._tree;
+        if ($.tree.notAllowParents(tree)) {
+            var body = layer.getChildFrame('body', index);
+            $("#deptId").val(body.find('#treeId').val());
+            $("#deptName").val(body.find('#treeName').val());
+            layer.close(index);
+        }
+    }
+
+    function doSubmit(index, layero) {
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dimple.evaluation.mapper.EamsRecordMapper">
+
+    <resultMap type="com.dimple.evaluation.domain.Record" id="EamsRecordMap">
+        <result property="stuId" column="stu_id"/>
+        <result property="ruleId" column="rule_id"/>
+        <result property="polId" column="pol_id"/>
+        <result property="polStuScore" column="pol_stu_score"/>
+        <result property="polStuCredence" column="pol_stu_credence"/>
+        <result property="polStudentCredenceRemark" column="pol_student_credence_remark"/>
+        <result property="polReviewScore" column="pol_review_score"/>
+        <result property="polReviewRemark" column="pol_review_remark"/>
+        <result property="reviewerName" column="reviewer_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="selectRecordById" resultMap="EamsRecordMap">
+        select
+          stu_id, rule_id, pol_id, pol_stu_score, pol_stu_credence, pol_student_credence_remark, pol_review_score, pol_review_remark, reviewer_name, create_by, create_time, update_by, update_time
+        from eams.eams_record
+        where rec_id = #{recId}
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectRecordList" resultMap="EamsRecordMap">
+        select
+        stu_id, rule_id, pol_id, pol_stu_score, pol_stu_credence, pol_student_credence_remark, pol_review_score,
+        pol_review_remark, reviewer_name, create_by, create_time, update_by, update_time
+        from eams_record
+        <where>
+            <if test="stuId != null">
+                and stu_id = #{stuId}
+            </if>
+            <if test="ruleId != null">
+                and rule_id = #{ruleId}
+            </if>
+            <if test="polId != null">
+                and pol_id = #{polId}
+            </if>
+            <if test="polStuScore != null">
+                and pol_stu_score = #{polStuScore}
+            </if>
+            <if test="polStuCredence != null and polStuCredence != ''">
+                and pol_stu_credence = #{polStuCredence}
+            </if>
+            <if test="polStudentCredenceRemark != null and polStudentCredenceRemark != ''">
+                and pol_student_credence_remark = #{polStudentCredenceRemark}
+            </if>
+            <if test="polReviewScore != null">
+                and pol_review_score = #{polReviewScore}
+            </if>
+            <if test="polReviewRemark != null and polReviewRemark != ''">
+                and pol_review_remark = #{polReviewRemark}
+            </if>
+            <if test="reviewerName != null and reviewerName != ''">
+                and reviewer_name = #{reviewerName}
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectRecordHeaderList" resultType="com.dimple.evaluation.domain.RecordHeader">
+        select sum(pol_stu_score)                                                                 as stu_total_score,
+        sum(pol_review_score)                                                              as review_total_score,
+        (select stu_num from eams_student where eams_student.stu_id = eams_record.stu_id)  as stu_num,
+        (select stu_name from eams_student where eams_student.stu_id = eams_record.stu_id) as stu_name,
+        (select prof_id from eams_student where eams_student.stu_id = eams_record.stu_id) as prof_id,
+        (select rule_name from eams_rule where eams_rule.rule_id = eams_record.rule_id)    as rule_name,
+        rule_id
+        from eams_record
+        group by stu_id, rule_id
+    </select>
+
+    <select id="selectRecordByStuIdAndRuleId" resultType="com.dimple.evaluation.domain.Record">
+        select stu_id, rule_id, pol_id, pol_stu_score, pol_stu_credence, pol_student_credence_remark, pol_review_score, pol_review_remark, reviewer_name, create_by, create_time, update_by, update_time
+        from eams_record where stu_id=#{stuId} and rule_id=#{ruleId}
+    </select>
+
+
+    <!--修改-->
+    <update id="updateRecord">
+        update eams_record
+        <set>
+            <if test="polStuScore != null">
+                pol_stu_score = #{polStuScore},
+            </if>
+            <if test="polStuCredence != null and polStuCredence != ''">
+                pol_stu_credence = #{polStuCredence},
+            </if>
+            <if test="polStudentCredenceRemark != null and polStudentCredenceRemark != ''">
+                pol_student_credence_remark = #{polStudentCredenceRemark},
+            </if>
+            <if test="polReviewScore != null">
+                pol_review_score = #{polReviewScore},
+            </if>
+            <if test="polReviewRemark != null and polReviewRemark != ''">
+                pol_review_remark = #{polReviewRemark},
+            </if>
+            <if test="reviewerName != null and reviewerName != ''">
+                reviewer_name = #{reviewerName},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            update_time = sysdate()
+        </set>
+        where
+        stu_id=#{stuId} and pol_id=#{polId} and rule_id=#{ruleId}
+    </update>
+
+    <!--通过主键修改数据-->
+    <insert id="insertRecord" keyProperty="recId" useGeneratedKeys="true">
+        insert into eams_record(
+        <if test="stuId != null and stuId != 0">stu_id,</if>
+        <if test="ruleId != null and ruleId != 0">rule_id,</if>
+        <if test="polId != null and polId != ''">pol_id,</if>
+        <if test="polStuScore != null and polStuScore != ''">pol_stu_score,</if>
+        <if test="polStuCredence != null and polStuCredence != ''">pol_stu_credence,</if>
+        <if test="polStudentCredenceRemark != null and polStudentCredenceRemark != ''">pol_student_credence_remark,</if>
+        <if test="polReviewScore != null">pol_review_score,</if>
+        <if test="polReviewRemark !=null and polReviewRemark != ''">pol_review_remark,</if>
+        <if test="reviewerName != null and reviewerName != ''">reviewer_name,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        create_time
+        )values(
+        <if test="stuId != null and stuId != 0">#{stuId},</if>
+        <if test="ruleId != null and ruleId != 0">#{ruleId},</if>
+        <if test="polId != null and polId != ''">#{polId},</if>
+        <if test="polStuScore != null and polStuScore != ''">#{polStuScore},</if>
+        <if test="polStuCredence != null and polStuCredence != ''">#{polStuCredence},</if>
+        <if test="polStudentCredenceRemark != null and polStudentCredenceRemark != ''">#{polStudentCredenceRemark},</if>
+        <if test="polReviewScore != null and polReviewScore != ''">#{polReviewScore},</if>
+        <if test="polReviewRemark != null">#{polReviewRemark},</if>
+        <if test="reviewerName !=null and reviewerName != ''">#{reviewerName},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        sysdate()
+        )
+    </insert>
+
+    <!--通过主键删除-->
+    <delete id="deleteRecordById">
+        delete from eams.eams_record where rec_id = #{recId}
+    </delete>
+
+    <delete id="deleteRecordByIds">
+        delete from eams_record where rec_id in
+        <foreach collection="array" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

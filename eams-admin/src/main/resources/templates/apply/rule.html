@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <th:block th:include="include :: header('可选规则')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 select-table ">
+            <h1 class="text-center text-info">河北冶金科学技术奖-在线申报</h1>
+            <div class="row">
+                <div class="col-sm-4 text-danger" th:text="${'申请人姓名：'+session.student.stuName}"></div>
+                <div class="col-sm-4 text-danger" th:text="${'提名号：'+session.student.stuNum}"></div>
+                <div class="col-sm-4 text-danger" th:text="${'申请单位：'+session.student.profName}"></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="text-danger">系统公告</h4>
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content no-padding">
+                            <div class="panel-body">
+                                <div class="panel-group" id="version">
+                                    <div class="panel panel-default" th:each="notice:${notices}"
+                                         th:if="${notice.noticeType=='2'}">
+                                        <div class="panel-heading">
+                                            <h5 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#version" href="#v33"
+                                                   th:href="${'#ID'+notice.noticeId}" th:text="${notice.noticeTitle}">v3.3.0</a><code
+                                                    class="pull-right"
+                                                    th:text="${#dates.format(notice.createTime,'yyyy-MM-dd')}">2019.04.01</code>
+                                            </h5>
+                                        </div>
+                                        <div th:id="${'ID'+notice.noticeId}" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+                                                <div th:utext="${notice.noticeContent}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <h4 class="text-danger">规则列表</h4>
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var datas = [[${@dict.getType('sys_normal_disable')}]];
+    var prefix = ctx + "f/apply/rule";
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            sortName: "createTime",
+            sortOrder: "desc",
+            modalName: "规则",
+            search: false,
+            showRefresh: false,
+            showToggle: false,
+            showColumns: false,
+            showSearch: false,
+            height: "300",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'ruleName',
+                    title: '规则名称',
+                },
+                {
+                    field: 'openTime',
+                    title: '开始时间',
+                    sortable: true
+                },
+                {
+                    field: 'closeTime',
+                    title: '结束时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + '" href="/f/apply/rule/' + row.ruleId + '" ><i class="fa fa-edit"></i>进入填报</a> ');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>

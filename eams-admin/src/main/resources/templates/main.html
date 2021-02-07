@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('首页')" />
+</head>
+
+<body class="gray-bg">
+<div class="row  border-bottom white-bg dashboard-header">
+    <div class="col-sm-12">
+        <blockquote class="text-muted" style="font-size:14px">
+<h2 class="text-primary text-center">欢迎登陆河北冶金科学技术奖系统 </h2>
+            <h4 class="text-info" th:text="${'当前系统版本:'+version}"></h4>
+            <br>
+          
+            <br>
+            <br>
+            
+        </blockquote>
+
+        <hr>
+    </div>
+
+</div>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>系统公告</h5>
+                </div>
+                <div class="ibox-content no-padding">
+                    <div class="panel-body">
+                        <div class="panel-group" id="version">
+                            <div class="panel panel-default" th:each="notice:${notices}"
+                                 th:if="${notice.noticeType=='2'}">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#version" href="#v33"
+                                           th:href="${'#ID'+notice.noticeId}" th:text="${notice.noticeTitle}">v3.3.0</a><code
+                                            class="pull-right"
+                                            th:text="${#dates.format(notice.createTime,'yyyy-MM-dd')}">2019.04.01</code>
+                                    </h5>
+                                </div>
+                                <div th:id="${'ID'+notice.noticeId}" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div th:utext="${notice.noticeContent}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var notices = [[${notices}]];
+    $(function () {
+        for (let i = 0; i < notices.length; i++) {
+            var notice = notices[i];
+            if (notice.noticeType == '1') {
+                console.log(notice.noticeTitle)
+                $.modal.alertWarningWithTitle(notice.noticeTitle,notice.noticeContent)
+            }
+        }
+
+    });
+
+</script>
+</body>
+</html>

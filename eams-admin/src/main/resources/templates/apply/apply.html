@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+     <meta charset="utf-8">
+    <th:block th:include="include :: header('策略列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-info" id="expandAllBtn">
+                <i class="fa fa-exchange"></i> 展开/折叠
+            </a>
+            <a class="btn btn-primary" id="submit">
+                <i class="fa fa-address-book"></i> 提交
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <h1 class="text-center text-info">河北冶金科学技术奖系统-在线申报</h1>
+            <div class="row">
+                <div class="col-sm-4 text-danger" th:text="${'申请人：'+session.student.stuName}"></div>
+                <div class="col-sm-4 text-danger" th:text="${'提名号：'+session.student.stuNum}"></div>
+                <div class="col-sm-4 text-danger" th:text="${'提名单位：'+session.student.profName}"></div>
+            </div>
+            <hr>
+            <table id="bootstrap-tree-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="stuNum" th:value="${student.stuNum}">
+<input type="hidden" name="ruleId" id="ruleId" th:value="${ruleId}">
+<input type="hidden" id="rootValue" th:value="${rootValue}">
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var datas = [[${@dict.getType('sys_normal_disable')}]];
+    var list = ctx + "f/apply/policy/list/" + $("#ruleId").val();
+    var rootValue = $("#rootValue").val();
+    $(function () {
+        var options = {
+            code: "polId",
+            parentCode: "parentId",
+            uniqueId: "polId",
+            url: list,
+            rootIdValue: rootValue,
+            showRefresh: false,
+            showColumns: false,
+            modalName: "策略",
+            columns: [{
+                field: 'selectItem',
+                radio: true
+            },
+                {
+                    field: 'polName',
+                    title: '名称',
+                    align: "left",
+                    width: "30%",
+                    formatter: function (value, item, index) {
+                        if (item.input == 1) {
+                            return '<span style="font-weight: bold">' + value + "</span>"
+                        } else {
+                            return value;
+                        }
+                    }
+                },
+                {
+                    field: 'score',
+                    title: '分值',
+                },
+                {
+                    field: 'remark',
+                    title: '说明',
+                    align: "left",
+                    width: "30%",
+                    formatter: function (value, row, index) {
+                        return $.table.tooltipWrap(value, 30);
+                    }
+                },
+                {
+                    field: '',
+                    title: '凭证图像地址',
+                    align: "left",
+                    formatter: function (value, item, index) {
+                        if (item.input == 1) {
+                            return "-";
+                        } else {
+                            return "<input type='hidden' class='form-control' value='" + item.polId + "' ><input class='form-control' name='url'>"
+                        }
+                    }
+                },
+                {
+                    field: '',
+                    title: '凭证说明',
+                    align: "left",
+                    formatter: function (value, item, index) {
+                        if (item.input == 1) {
+                            return "-";
+                        } else {
+                            return "<input class='form-control' name='desc'   >"
+                        }
+                    }
+                },
+                {
+                    field: 'input',
+                    title: '自评得分',
+                    align: "left",
+                    formatter: function (value, item, index) {
+                        if (value == 1) {
+                            return "-";
+                        } else {
+                            return "<input class='form-control'  value='0' name='score' style='width: 100%' >"
+                        }
+                    }
+                },]
+        };
+        $.treeTable.init(options);
+    });
+
+    $("#submit").click(function () {
+        var form = document.getElementById("bootstrap-tree-table");
+        var inputs = $(form.getElementsByClassName("form-control"));
+        var datas = new Array();
+        var j = 0;
+        var i = 0
+        while (i < inputs.length) {
+            var data = new Object();
+            data.polId = $(inputs[i]).val()
+            console.log(data.polId)
+            i++;
+            data.polStuCredence = $(inputs[i]).val()
+            i++;
+            data.polStuCredenceRemark = $(inputs[i]).val()
+            i++;
+            data.polStuScore = $(inputs[i]).val()
+            i++;
+            datas[j++] = data;
+        }
+        console.log(datas);
+        $.ajax({
+            url: "/f/apply",
+            dataType: "json",
+            data: JSON.stringify(datas),
+            type: "post",
+            contentType: "application/json",
+            success: function (result) {
+                window.location="/f/apply/rule"
+            }
+        });
+    });
+
+
+</script>
+</body>
+</html>
