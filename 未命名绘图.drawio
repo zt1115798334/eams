@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-08-09T03:37:52.065Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="UfQg-a_oMvglGM_E3MeX" version="21.6.7" type="github">
+<mxfile host="app.diagrams.net" modified="2023-08-09T05:07:48.749Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="gIE9-U1fUuqi6FpnXLRY" version="21.6.7" type="github">
   <diagram name="第 1 页" id="Qo3NlEUfDWglHUb4smuS">
-    <mxGraphModel dx="1434" dy="870" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1687" dy="1024" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -26,28 +26,70 @@
           <mxGeometry x="580" y="250" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="B9DaAj5A1uP3eyhogslN-11" value="界面逻辑：将时间戳 加密值传给后台获取token，跳转首页。" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="545" y="210" width="155" height="30" as="geometry" />
+          <mxGeometry x="630" y="340" width="155" height="30" as="geometry" />
         </mxCell>
         <mxCell id="B9DaAj5A1uP3eyhogslN-12" value="方案1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="20" y="280" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="B9DaAj5A1uP3eyhogslN-14" value="方案2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="30" y="530" width="60" height="30" as="geometry" />
+          <mxGeometry x="35" y="580" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="B9DaAj5A1uP3eyhogslN-15" value="跳转系统B按钮" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="130" y="520" width="120" height="40" as="geometry" />
+          <mxGeometry x="135" y="570" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="B9DaAj5A1uP3eyhogslN-17" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="B9DaAj5A1uP3eyhogslN-15" target="B9DaAj5A1uP3eyhogslN-18">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="390" y="370" as="sourcePoint" />
-            <mxPoint x="570" y="540" as="targetPoint" />
+            <mxPoint x="395" y="420" as="sourcePoint" />
+            <mxPoint x="575" y="590" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="B9DaAj5A1uP3eyhogslN-18" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
-          <mxGeometry x="570" y="500" width="80" height="80" as="geometry" />
+        <mxCell id="B9DaAj5A1uP3eyhogslN-18" value="系统B接口" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="595" y="630" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="B9DaAj5A1uP3eyhogslN-19" value="请求系统B链接，携带" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="270" y="480" width="220" height="60" as="geometry" />
+        <mxCell id="B9DaAj5A1uP3eyhogslN-19" value="请求系统B链接，携带系统A的token1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="315" y="570" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-20" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.288;exitY=0.95;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="B9DaAj5A1uP3eyhogslN-18" target="B9DaAj5A1uP3eyhogslN-21">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="395" y="720" as="sourcePoint" />
+            <mxPoint x="245" y="820" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-21" value="系统A的鉴权接口" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="155" y="780" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-22" value="携带token1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="389" y="770" width="136" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-23" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.825;exitY=0.05;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="B9DaAj5A1uP3eyhogslN-21" target="B9DaAj5A1uP3eyhogslN-18">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="395" y="720" as="sourcePoint" />
+            <mxPoint x="575" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-24" value="返回鉴权结果" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="315" y="700" width="136" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-25" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="B9DaAj5A1uP3eyhogslN-18">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="625" y="780" as="sourcePoint" />
+            <mxPoint x="635" y="900" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-26" value="根据鉴权结果，生成系统B的token" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="645" y="770" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-28" value="系统B的首页" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="575" y="900" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-29" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="B9DaAj5A1uP3eyhogslN-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="620" y="410" as="sourcePoint" />
+            <mxPoint x="620" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="B9DaAj5A1uP3eyhogslN-30" value="系统B的首页" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="570" y="400" width="120" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
